@@ -1,17 +1,18 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
-//https://www.omdbapi.com/
-const apiKey = "201b5c9b"
+import React from "react";
+import { ToastContainer } from "react-toastify";
+import { MovieProvider } from "./context/MovieContext";
 
-function App() {
-  const [count, setCount] = useState(0)
+import Routing from "./Routing";
 
+const App = () => {
   return (
-    <div className="App">
-     
-    </div>
-  )
-}
+    <>
+      <MovieProvider>
+        <Routing />
+        <ToastContainer />
+      </MovieProvider>
+    </>
+  );
+};
 
-export default App
+export default App;
