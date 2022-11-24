@@ -1,0 +1,12 @@
+.movie-card-container {
+    display: flex; 
+    flex-direction: column;
+}
+
+.movie-card-container h4 {
+    width: 200px; 
+}
+
+.button-container {
+    display: flex; 
+}

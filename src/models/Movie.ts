@@ -3,4 +3,6 @@ export interface Movie {
     Poster: string;
     Year: number;
     Rating: string; 
+    imdbID: string;
+
 }

@@ -17,6 +17,8 @@ export const MovieReducer = (state: MovieContextProps, action: IAction) => {
         ...state,
         watched: [action.payload, ...state.watched],
       };
+    case "DELETE_MOVIE":
+      return 
     default:
       return state;
   }
