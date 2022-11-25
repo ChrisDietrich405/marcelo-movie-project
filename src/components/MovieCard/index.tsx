@@ -40,7 +40,7 @@ const MovieCard = ({ movie, type, deleteMovie }: MovieCardProps) => {
       <div className="button-container">
 
       <BootstrapButton
-        disabled={watchlist}
+        //disabled={watchlist}
         type="submit"
         variant="outlined"
         onClick={() => AddMovieToWatchlistAction!(movie)}

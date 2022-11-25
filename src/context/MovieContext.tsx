@@ -56,7 +56,13 @@ export const MovieProvider = ({ children }: MovieProviderProps) => {
   }
 
   useEffect(() => {
-    localStorage.setItem("watchlist", JSON.stringify(state.watchlist));
+    const watchlistArray = localStorage.getItem("watchlist")
+    if(watchlistArray) {
+      dispatch({type: "LOAD_WATCHLIST", payload: JSON.parse(watchlistArray)})
+    }
+  }, [])
+
+  useEffect(() => {
     localStorage.setItem("watched", JSON.stringify(state.watched))
   }, [state.watchlist, state.watched]);
 

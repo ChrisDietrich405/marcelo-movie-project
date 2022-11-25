@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,28 +10,27 @@ import { Movie } from "../../models/Movie";
 import { MovieContext, MovieContextProps } from "../../context/MovieContext";
 import MovieCard from "../MovieCard";
 
-import "./styles.css"
+import "./styles.css";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
 function Home() {
   const [query, setQuery] = useState<string>("");
   const [movies, setMovies] = useState<Movie[]>([]);
-
-  const { watchlist } = useContext(MovieContext)
+  const [searchControl, setSearchControl] = useState(false)
+  const { watchlist } = useContext(MovieContext);
 
   const navigate = useNavigate();
 
-  let foundWatchlistMovie = watchlist.find((object) => object.imdbID === movie.imdbID)
-  const watchlistDisabled = foundWatchlistMovie ? true : false
   
-
   const fetchMovie = () => {
     api
       .get(`/?apikey=${apiKey}&t=${query}`)
       .then((res) => {
-        console.log(res.data)
-        setMovies([...movies, res.data]);
+        if (res.data.Response !== "False") {
+          setMovies([...movies, res.data]);
+        }
+        setSearchControl(true)
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -48,9 +47,24 @@ function Home() {
   };
 
   const deleteMovie = (id: string) => {
-    const updatedMovies = movies.filter((movie) => movie.imdbID !== id)
-    setMovies(updatedMovies)
-  }
+    const updatedMovies = movies.filter((movie) => movie.imdbID !== id);
+    setMovies(updatedMovies);
+  };
+
+const newFunc = () => {
+  const updatedMovies = movies.map((movie) => {
+    let foundWatchlistMovie = watchlist.find((object) => object.imdbID === movie.imdbID)
+    const watchlistDisabled = foundWatchlistMovie ? true : false  
+    return {
+      ...movie, disabled: watchlistDisabled
+    }
+  })
+  setMovies(updatedMovies)
+}
+
+  useEffect(() => {
+    newFunc()
+  }, [movies])
 
   const BootstrapButton = styled(Button)({
     boxShadow: "none",
@@ -73,8 +87,16 @@ function Home() {
         </BootstrapButton>
       </form>
       <div className="movies-container">
+        {searchControl && movies.length === 0 && "no movie found"}
         {movies.map((movie) => {
-          return <MovieCard watchlistDisabled={watchlistDisabled} deleteMovie={deleteMovie} movie={movie} type="white" />;
+          return (
+            <MovieCard
+              // watchlistDisabled={watchlistDisabled}
+              deleteMovie={deleteMovie}
+              movie={movie}
+              type="white"
+            />
+          );
         })}
       </div>
     </div>
